@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terms of Service – Cadence</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="icon" type="image/png" href="cadence-logo.png">
+</head>
+<body class="bg-gray-50 text-gray-900">
+  <!-- Navigation Bar -->
+  <header class="bg-white shadow-sm sticky top-0 z-30">
+    <div class="max-w-4xl mx-auto flex items-center justify-between px-4 py-3">
+      <div class="flex items-center">
+        <img src="cadence-logo.png" alt="Cadence Logo" class="h-8 w-8 object-contain"/>
+        <span class="text-xl font-bold tracking-tight ml-0.5">Cadence</span>
+      </div>
+      <nav class="space-x-6 hidden sm:block">
+        <a href="landing.html" class="text-gray-700 hover:text-blue-600 font-medium">Home</a>
+        <a href="privacy.html" class="text-gray-700 hover:text-blue-600 font-medium">Privacy Policy</a>
+        <a href="terms.html" class="text-gray-700 hover:text-blue-600 font-medium">Terms of Service</a>
+      </nav>
+      <button id="mobile-menu-btn" class="sm:hidden p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400" aria-label="Open menu">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+      </button>
+    </div>
+    <!-- Mobile Menu -->
+    <nav id="mobile-menu" class="sm:hidden hidden px-4 pb-4 bg-white border-b">
+      <a href="landing.html" class="block py-2 text-gray-700 hover:text-blue-600 font-medium">Home</a>
+      <a href="privacy.html" class="block py-2 text-gray-700 hover:text-blue-600 font-medium">Privacy Policy</a>
+      <a href="terms.html" class="block py-2 text-gray-700 hover:text-blue-600 font-medium">Terms of Service</a>
+    </nav>
+  </header>
+  <main class="max-w-2xl mx-auto py-12 px-4">
+    <h1 class="text-3xl font-extrabold mb-6">Terms of Service</h1>
+    <p class="mb-4 text-gray-500">Effective Date: [Insert Date]</p>
+    <p class="mb-6">By installing or using the Cadence Chrome Extension (“Service”), you agree to the following Terms of Service (“Terms”). If you do not agree, do not use the Service.</p>
+    <h2 class="text-xl font-bold mt-8 mb-2">1. Use of Service</h2>
+    <p class="mb-4">You agree to use Cadence only for lawful purposes. You must not misuse the extension, reverse engineer it, or violate platform (e.g., LinkedIn) policies when using it.</p>
+    <h2 class="text-xl font-bold mt-8 mb-2">2. Free Plan & Limitations</h2>
+    <ul class="list-disc ml-6 mb-4">
+      <li>Free users are granted 5 rewrites per month and may input content up to 750 characters.</li>
+      <li>Limits are enforced via browser storage and may reset monthly.</li>
+    </ul>
+    <h2 class="text-xl font-bold mt-8 mb-2">3. Pro Plan</h2>
+    <ul class="list-disc ml-6 mb-4">
+      <li>By upgrading to Cadence Pro, you unlock: Unlimited rewrites, Longer content rewrites, Access to advanced tones</li>
+      <li>All purchases are final unless otherwise stated. We reserve the right to update pricing.</li>
+    </ul>
+    <h2 class="text-xl font-bold mt-8 mb-2">4. AI Content Disclaimer</h2>
+    <p class="mb-4">Rewrites are powered by OpenAI's language model. While Cadence enhances tone, we make no guarantees regarding grammatical correctness, legal compliance, or effectiveness of rewritten content.</p>
+    <h2 class="text-xl font-bold mt-8 mb-2">5. Intellectual Property</h2>
+    <p class="mb-4">All branding, designs, and copy related to Cadence are owned by [Your Company Name]. You may not reproduce or redistribute any part of the Service without permission.</p>
+    <h2 class="text-xl font-bold mt-8 mb-2">6. Termination</h2>
+    <p class="mb-4">We may suspend or terminate access to the Service for violation of these Terms or abuse of our systems.</p>
+    <h2 class="text-xl font-bold mt-8 mb-2">7. Limitation of Liability</h2>
+    <p class="mb-4">Cadence is provided “as is.” We are not liable for any damages or losses arising from use of the Service, including business loss, reputation harm, or content misrepresentation.</p>
+    <h2 class="text-xl font-bold mt-8 mb-2">8. Modifications to Terms</h2>
+    <p class="mb-4">We reserve the right to modify these Terms at any time. Continued use after changes indicates acceptance.</p>
+    <h2 class="text-xl font-bold mt-8 mb-2">9. Contact</h2>
+    <p class="mb-4">For questions or support:<br>
+      <a href="mailto:your-email@example.com" class="text-blue-600 underline">your-email@example.com</a>
+    </p>
+  </main>
+  <footer class="py-8 text-center text-gray-400 text-sm bg-gray-100 border-t mt-12">
+    <a href="landing.html" class="hover:underline">Home</a>
+    <span class="mx-2">|</span>
+    <a href="privacy.html" class="hover:underline">Privacy Policy</a>
+    <span class="mx-2">|</span>
+    <a href="terms.html" class="hover:underline">Terms of Service</a>
+    <div class="mt-2">&copy; <span id="year"></span> Cadence. All rights reserved.</div>
+  </footer>
+  <script>
+    // Mobile menu toggle
+    document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+      var menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('hidden');
+    });
+    // Set current year in footer
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html> 
