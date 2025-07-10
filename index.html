@@ -310,8 +310,6 @@
   <script src="landing-animations.js"></script>
   <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-    import { Auth } from 'https://cdn.jsdelivr.net/npm/@supabase/auth-ui@0.3.1/+esm';
-    import { ThemeSupa } from 'https://cdn.jsdelivr.net/npm/@supabase/auth-ui@0.3.1/+esm';
 
     const supabaseUrl = 'https://cljcbfbjbbxszvbzqwxd.supabase.co'; // TODO: Replace with your Supabase Project URL
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNsamNiZmJqYmJ4c3p2Ynpxd3hkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIwNTcwNzIsImV4cCI6MjA2NzYzMzA3Mn0.Mp6cpwWwQzHTDRxPQT8VeTOjwwtnQFO5GFnUnsJCrec'; // TODO: Replace with your Supabase anon/public API key
@@ -338,15 +336,12 @@
       if (e.target === authModal) closeModal();
     };
 
-    // Render Supabase Auth UI in modal
-    Auth.mount(supabaseAuthDiv, {
-      supabaseClient: supabase,
-      appearance: { theme: ThemeSupa },
-      providers: ['google'],
-      theme: 'light',
-      showLinks: true,
-      redirectTo: window.location.origin,
-    });
+    // Render a simple Google login button in the modal
+    supabaseAuthDiv.innerHTML = `<button id="google-login-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-5 rounded-lg shadow transition">Sign in with Google</button>`;
+    document.getElementById('google-login-btn').onclick = async () => {
+      const { error } = await supabase.auth.signInWithOAuth({ provider: 'google' });
+      if (error) alert('Login failed: ' + error.message);
+    };
 
     // Auth state management
     function updateNavbar(session) {
@@ -398,30 +393,30 @@
       'Get your tone right, every time',
       'Cadence: Your LinkedIn writing assistant'
     ];
-    let i = 0, j = 0, currentPhrase = [], isDeleting = false, isEnd = false;
+    let phraseIndex = 0, j = 0, currentPhrase = [], isDeleting = false, isEnd = false;
     function loop () {
       isEnd = false;
       document.getElementById('typewriter').innerHTML = currentPhrase.join('');
-      if (i < phrases.length) {
-        if (!isDeleting && j <= phrases[i].length) {
-          currentPhrase.push(phrases[i][j]);
+      if (phraseIndex < phrases.length) {
+        if (!isDeleting && j <= phrases[phraseIndex].length) {
+          currentPhrase.push(phrases[phraseIndex][j]);
           j++;
           document.getElementById('typewriter').innerHTML = currentPhrase.join('');
         }
-        if(isDeleting && j <= phrases[i].length) {
-          currentPhrase.pop(phrases[i][j]);
+        if(isDeleting && j <= phrases[phraseIndex].length) {
+          currentPhrase.pop(phrases[phraseIndex][j]);
           j--;
         }
-        if (j == phrases[i].length) {
+        if (j == phrases[phraseIndex].length) {
           isEnd = true;
           isDeleting = true;
         }
         if (isDeleting && j === 0) {
           currentPhrase = [];
           isDeleting = false;
-          i++;
-          if (i === phrases.length) {
-            i = 0;
+          phraseIndex++;
+          if (phraseIndex === phrases.length) {
+            phraseIndex = 0;
           }
         }
       }
