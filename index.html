@@ -60,10 +60,11 @@
         <img src="cadence-logo.png" alt="Cadence Logo" class="h-8 w-8 object-contain"/>
         <span class="text-xl font-bold tracking-tight ml-0.5">Cadence</span>
       </div>
-      <nav class="space-x-6 hidden sm:block">
+      <nav class="space-x-6 hidden sm:block" id="navbar-links">
         <a href="index.html" class="text-gray-700 hover:text-blue-600 font-medium">Home</a>
         <a href="privacy.html" class="text-gray-700 hover:text-blue-600 font-medium">Privacy Policy</a>
         <a href="terms.html" class="text-gray-700 hover:text-blue-600 font-medium">Terms of Service</a>
+        <button id="open-auth-modal" class="ml-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-5 rounded-lg shadow transition">Login / Signup</button>
       </nav>
       <button id="mobile-menu-btn" class="sm:hidden p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400" aria-label="Open menu">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
@@ -77,6 +78,15 @@
     </nav>
   </header>
 
+  <!-- Auth Modal -->
+  <div id="auth-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 hidden">
+    <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-8 relative animate-fadeinup">
+      <button id="close-auth-modal" class="absolute top-3 right-3 text-gray-400 hover:text-gray-700 text-2xl font-bold focus:outline-none">&times;</button>
+      <h2 class="text-2xl font-bold mb-4 text-center">Sign in to Cadence</h2>
+      <div id="supabase-auth"></div>
+    </div>
+  </div>
+
   <!-- Hero Section -->
   <section class="bg-gradient-to-br from-blue-50 via-white to-blue-100 py-16 px-4 shadow-md">
     <div class="max-w-3xl mx-auto text-center">
@@ -88,6 +98,13 @@
       <span class="inline-block mt-2">✅ One click. 🚀 Five tones. 🎯 Instant results.</span></p>
       <a href="#get-cadence" class="cta-btn inline-block bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500 text-white font-bold py-3 px-8 rounded-lg text-lg shadow transition transform hover:scale-105 focus:scale-105 focus:outline-none">Get Cadence Free →</a>
       <p class="mt-4 text-gray-500">Used by founders, job seekers, creators, and consultants who need to get their tone right — the first time.</p>
+    </div>
+  </section>
+
+  <!-- Google Login Section -->
+  <section class="max-w-xl mx-auto mt-8 mb-8 text-center" id="auth-section">
+    <div id="auth-content">
+      <button id="login-google" class="cta-btn bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500 text-white font-bold py-3 px-8 rounded-lg text-lg shadow transition transform hover:scale-105 focus:scale-105 focus:outline-none">Sign in with Google</button>
     </div>
   </section>
 
@@ -291,6 +308,81 @@
 
   <script src="typewriter.js"></script>
   <script src="landing-animations.js"></script>
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+    import { Auth } from 'https://cdn.jsdelivr.net/npm/@supabase/auth-ui@0.3.1/+esm';
+    import { ThemeSupa } from 'https://cdn.jsdelivr.net/npm/@supabase/auth-ui@0.3.1/+esm';
+
+    const supabaseUrl = 'https://cljcbfbjbbxszvbzqwxd.supabase.co'; // TODO: Replace with your Supabase Project URL
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNsamNiZmJqYmJ4c3p2Ynpxd3hkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIwNTcwNzIsImV4cCI6MjA2NzYzMzA3Mn0.Mp6cpwWwQzHTDRxPQT8VeTOjwwtnQFO5GFnUnsJCrec'; // TODO: Replace with your Supabase anon/public API key
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    // Modal logic
+    const authModal = document.getElementById('auth-modal');
+    const openAuthBtn = document.getElementById('open-auth-modal');
+    const closeAuthBtn = document.getElementById('close-auth-modal');
+    const navbarLinks = document.getElementById('navbar-links');
+    const supabaseAuthDiv = document.getElementById('supabase-auth');
+
+    function openModal() {
+      authModal.classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
+    }
+    function closeModal() {
+      authModal.classList.add('hidden');
+      document.body.classList.remove('overflow-hidden');
+    }
+    openAuthBtn.onclick = openModal;
+    closeAuthBtn.onclick = closeModal;
+    authModal.onclick = (e) => {
+      if (e.target === authModal) closeModal();
+    };
+
+    // Render Supabase Auth UI in modal
+    Auth.mount(supabaseAuthDiv, {
+      supabaseClient: supabase,
+      appearance: { theme: ThemeSupa },
+      providers: ['google'],
+      theme: 'light',
+      showLinks: true,
+      redirectTo: window.location.origin,
+    });
+
+    // Auth state management
+    function updateNavbar(session) {
+      if (session && session.user) {
+        navbarLinks.innerHTML = `
+          <a href="index.html" class="text-gray-700 hover:text-blue-600 font-medium">Home</a>
+          <a href="privacy.html" class="text-gray-700 hover:text-blue-600 font-medium">Privacy Policy</a>
+          <a href="terms.html" class="text-gray-700 hover:text-blue-600 font-medium">Terms of Service</a>
+          <span class="ml-4 text-blue-700 font-semibold">${session.user.email}</span>
+          <button id="logout-btn" class="ml-4 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-5 rounded-lg shadow transition">Logout</button>
+        `;
+        document.getElementById('logout-btn').onclick = async () => {
+          await supabase.auth.signOut();
+        };
+      } else {
+        navbarLinks.innerHTML = `
+          <a href="index.html" class="text-gray-700 hover:text-blue-600 font-medium">Home</a>
+          <a href="privacy.html" class="text-gray-700 hover:text-blue-600 font-medium">Privacy Policy</a>
+          <a href="terms.html" class="text-gray-700 hover:text-blue-600 font-medium">Terms of Service</a>
+          <button id="open-auth-modal" class="ml-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-5 rounded-lg shadow transition">Login / Signup</button>
+        `;
+        document.getElementById('open-auth-modal').onclick = openModal;
+      }
+    }
+
+    // Initial check
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      updateNavbar(session);
+      if (session && session.user) closeModal();
+    });
+    // Listen for auth state changes
+    supabase.auth.onAuthStateChange((_event, session) => {
+      updateNavbar(session);
+      if (session && session.user) closeModal();
+    });
+  </script>
   <script>
     // Mobile menu toggle
     document.getElementById('mobile-menu-btn').addEventListener('click', function() {
